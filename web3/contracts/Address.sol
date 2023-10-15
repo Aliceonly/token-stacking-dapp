@@ -1,7 +1,7 @@
 /**
- * @title
+ * @title Address Library
  * @author Aliceonly
- * @notice
+ * @notice 这是一个用于Address的库合约
  */
 
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
@@ -11,6 +11,7 @@ library Address {
     /**
      * @notice 检测地址是否是合约地址
      * @param account
+     * @return 判断account.code.length
      */
     function isContract(address account) internal view returns (bool) {
         return account.code.length > 0;
