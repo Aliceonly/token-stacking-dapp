@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.9;
 
+/**
+ * @title custom ERC20 Token
+ * @author Aliceonly
+ */
+
 contract TheblockchainCoders() {
     string public name = "@Aliceonly";
     string public symbol = "ABC";
