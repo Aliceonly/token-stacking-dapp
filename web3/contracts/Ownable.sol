@@ -2,15 +2,23 @@ pragma solidity ^0.8.9;
 
 import "./Context.sol";
 
+/**
+ * @title Ownable抽象合约
+ * @author Aliceonly
+ * @notice 
+ */
+
 abstract contract Ownable is Context {
     address private _owner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
+    //构造时拥有
     constructor() {
         _transferOwnership(_msgSender());
     }
 
+    //限制拥有
     modifier onlyOwner() {
         _checkOwner();
         _;
@@ -24,6 +32,7 @@ abstract contract Ownable is Context {
         require(owner() == _msgSender(), "Ownable: caller is not the owner");
     }
 
+    //放弃拥有
     function renounceOwnership() public virtual onlyOwner {
         _transferOwnership(address(0));
     }
@@ -39,5 +48,5 @@ abstract contract Ownable is Context {
         emit OwnershipTransferred(oldOwner, newOwner);
     }
 
-    
+
 }
