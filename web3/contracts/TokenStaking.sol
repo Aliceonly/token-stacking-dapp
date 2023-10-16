@@ -101,4 +101,98 @@ contract TokenStaking is Ownable, ReentrancyGuard, Initializable {
         _stakeDays = stakeDays_ * 1 days;
         _earlyUnstakeFeePercentage = earlyUnstakeFeePercentage_;
     }
+
+    /**
+     * View Methods
+     */
+    function getMinimumStakingAmount() external view returns(uint256) {
+        return _minimunStakingAmount;
+    }
+
+    function getMaxStakingTokenLimit() external view returns(uint256){
+        return _maxStakeTokenLimit;
+    }
+
+    function getStakeStartDate() external view returns(uint256){
+        return _stakeStartDate;
+    }
+
+    function getTotalStakedToken() external view returns(uint256){
+        return _totalStakedTokens;
+    }
+
+    function getTotalUser() external view returns(uint256){
+        return _totalUsers;
+    }
+
+    function getStakeDays() external view returns(uint256){
+        return _stakeDays;
+    }
+
+    function getEarlyUnstakeFeePercentage() external view returns(uint256){
+        return _earlyUnstakeFeePercentage;
+    }
+
+    function getStakingStatus() external view returns(bool){
+        return _isStakingPaused;
+    }
+
+    function getAPY() external view returns(uint256){
+        return _apyRate;
+    }
+
+    function getUserEstimatedRewards() external view returns(uint256){
+        (uint256 amount, ) = _getUserEstimatedRewards(msg.sender);
+        return _users[msg.sender].rewardAmount + amount;
+    }
+
+    function getWithdrawableAmount() external view returns (uint256) {
+        return IERC20(_tokenAddress).balanceOf(address(this)) - _totalStakedTokens;
+    }
+
+    function getUser(address userAddress) external view returns(User memory){
+        return _users[userAddress];
+    }
+
+    function isStakingHolder(address _user) external view returns(bool){
+        return _users[_user].stakeAmount > 0;
+    }
+
+    /**
+     * Owner Methods
+     */
+
+    function updateMinimumStakingAmount(uint256 newAmount) external onlyOwner {
+        _minimunStakingAmount = newAmount;
+    }
+
+    function updateMaxStakingTokenLimit(uint256 newAmount) external onlyOwner {
+        _maxStakeTokenLimit = newAmount;
+    }
+
+    function updateStakeEndDate(uint256 newDate) external onlyOwner {
+        _stakeEndDate = newDate;
+    }
+
+    function updateEarlyUnstakeFeePercentage(uint256 newPercentage) external onlyOwner {
+        _earlyUnstakeFeePercentage = newPercentage;
+    }
+
+    function stakeForUser(uint256 amount, address user) external onlyOwner nonReentrant {
+        _stake(amount, user);
+    }
+
+    function toggleStakingStatus() external onlyOwner {
+        _isStakingPaused = !_isStakingPaused;
+    }
+
+    function withdraw(uint256 amount) external onlyOwner nonReentrant {
+        require(
+            this.getWithdrawableAmount() >= amount,
+            "Treasury has insufficient balance"
+        );
+        IERC20(_tokenAddress).transfer(msg.sender, amount);
+    }
+
+    
 }
